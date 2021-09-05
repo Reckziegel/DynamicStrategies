@@ -7,18 +7,19 @@
 \method{autoplot}{DynamicStrategies}(object, ...)
 }
 \arguments{
-\item{object}{An object of the `DynamicStrategies` class.}
+\item{object}{An object of the \code{DynamicStrategies} class.}
 
-\item{...}{Additional arguments to be passed to `autoplot`.}
+\item{...}{Additional arguments to be passed to \code{autoplot}.}
 }
 \value{
 A \code{ggplot2} object.
 }
 \description{
-Extends the `autoplot` method for the `DynamicStrategies` class.
+Extends the \code{autoplot} method for the \code{DynamicStrategies} class.
 }
 \examples{
 library(ggplot2)
 
-simulate_strategy() |> autoplot()
+# Maximum Utility
+simulate_strategy(strategy = "max_utility") |> autoplot()
 }

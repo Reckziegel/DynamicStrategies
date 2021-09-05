@@ -2,7 +2,7 @@
 % Please edit documentation in R/simulate_strategy.R
 \name{simulate_strategy}
 \alias{simulate_strategy}
-\title{Convex vs Concave Portfolio Management}
+\title{Convex vs Concave Portfolio Simulation}
 \usage{
 simulate_strategy(
   budget = 10000,
@@ -16,7 +16,7 @@ simulate_strategy(
   allocation = 0.5,
   floor = budget * 0.9,
   multiple = 10,
-  aggressivness = 0.5
+  aggressiveness = 0.5
 )
 }
 \arguments{
@@ -32,7 +32,7 @@ simulate_strategy(
 
 \item{rf}{A \code{double}. The risk-free rate, in years.}
 
-\item{n_simul}{An \code{integer}. The number of simulations to be conducted.}
+\item{n_simul}{A \code{integer}. The number of simulations to be conducted.}
 
 \item{strategy}{A \code{character}. One of: "max_utility", "buy_hold", "cppi", "obpi".}
 
@@ -42,9 +42,9 @@ simulate_strategy(
 \item{floor}{A \code{double}. The amount the investor doesn't want to loose. Only
 used if \code{strategy = "cppi"}.}
 
-\item{multiple}{An \code{integer} showing how aggressive the investor should be.}
+\item{multiple}{A \code{integer} showing how aggressive the investor should be.}
 
-\item{aggressivness}{A \code{double} between \code{0} and \code{1} showing how
+\item{aggressiveness}{A \code{double} between \code{0} and \code{1} showing how
 aggressive the investor should be. Higher numbers are connected with higher convexity.}
 }
 \value{

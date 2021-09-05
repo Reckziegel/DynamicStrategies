@@ -1,10 +1,10 @@
 #' @keywords internal
-Delta <- function(Time_to_Maturity, Stock_Value, Stock_Volatility, Strike, Riskfree_Rate) {
+delta <- function(time_to_maturity, stock_value, stock_volatility, strike, risk_free_rate) {
 
-  Time_to_Maturity <- max(c(Time_to_Maturity, 10^(-9))) # avoid division by zero message
+  time_to_maturity <- max(c(time_to_maturity, 10^(-9))) # avoid division by zero message
 
-  d1 <- 1 / (Stock_Volatility * sqrt(Time_to_Maturity)) *
-    (log(Stock_Value / Strike) + (Riskfree_Rate * Stock_Volatility ^ 2 / 2) * Time_to_Maturity)
+  d1 <- 1 / (stock_volatility * sqrt(time_to_maturity)) *
+    (log(stock_value / strike) + (risk_free_rate * stock_volatility ^ 2 / 2) * time_to_maturity)
 
   D <- stats::pnorm(d1, 0, 1)
   D
@@ -12,19 +12,19 @@ Delta <- function(Time_to_Maturity, Stock_Value, Stock_Volatility, Strike, Riskf
 }
 
 #' @keywords internal
-Solve4Strike <- function(Strike,Time_to_Maturity, Stock_Value, Stock_Volatility,
-                         Riskfree_Rate, Initial_Investment, Maximum_Loss) {
+solve_for_strike <- function(strike, time_to_maturity, stock_value, stock_volatility,
+                         risk_free_rate, initial_investment, maximum_loss) {
 
-  d1 <- 1 / (Stock_Volatility * sqrt(Time_to_Maturity)) *
-    (log(Stock_Value / Strike) + (Riskfree_Rate * Stock_Volatility ^ 2 / 2) * Time_to_Maturity)
-  d2 <- d1 - Stock_Volatility * sqrt(Time_to_Maturity)
+  d1 <- 1 / (stock_volatility * sqrt( time_to_maturity)) *
+    (log(stock_value / strike) + (risk_free_rate * stock_volatility ^ 2 / 2) *  time_to_maturity)
+  d2 <- d1 - stock_volatility * sqrt( time_to_maturity)
 
-  PV <- exp(-Riskfree_Rate * Time_to_Maturity)
+  PV <- exp(-risk_free_rate *  time_to_maturity)
 
-  Call_Price <- Stock_Value * stats::pnorm(d1, 0, 1) - PV * Strike * stats::pnorm(d2, 0, 1)
+  Call_Price <- stock_value * stats::pnorm(d1, 0, 1) - PV * strike * stats::pnorm(d2, 0, 1)
 
-  Guaranteed <- Initial_Investment - Maximum_Loss
-  Cash_Available <- Initial_Investment - PV * Guaranteed
+  Guaranteed <- initial_investment - maximum_loss
+  Cash_Available <- initial_investment - PV * Guaranteed
 
   K <- Cash_Available - Call_Price
   K

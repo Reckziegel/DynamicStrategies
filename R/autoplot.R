@@ -1,9 +1,9 @@
 #' Easy Inspection of a Dynamic Strategy Simulation
 #'
-#' Extends the `autoplot` method for the `DynamicStrategies` class.
+#' Extends the \code{autoplot} method for the \code{DynamicStrategies} class.
 #'
-#' @param object An object of the `DynamicStrategies` class.
-#' @param ... Additional arguments to be passed to `autoplot`.
+#' @param object An object of the \code{DynamicStrategies} class.
+#' @param ... Additional arguments to be passed to \code{autoplot}.
 #'
 #' @return A \code{ggplot2} object.
 #' @export
@@ -14,7 +14,8 @@
 #' @examples
 #' library(ggplot2)
 #'
-#' simulate_strategy() |> autoplot()
+#' # Maximum Utility
+#' simulate_strategy(strategy = "max_utility") |> autoplot()
 autoplot.DynamicStrategies <- function(object, ...) {
 
   budget <- attributes(object)$budget

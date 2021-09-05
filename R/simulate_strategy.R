@@ -1,4 +1,4 @@
-#' Convex vs Concave Portfolio Management
+#' Convex vs Concave Portfolio Simulation
 #'
 #' This function simulates the payoff of different kinds of dynamic strategies.
 #' Depending on the option chosen, the output may be concave or convex.
@@ -9,14 +9,14 @@
 #' @param mu A \code{double}. The mean of the process, in years.
 #' @param sigma A \code{double}. The volatility of the process, in years.
 #' @param rf A \code{double}. The risk-free rate, in years.
-#' @param n_simul An \code{integer}. The number of simulations to be conducted.
+#' @param n_simul A \code{integer}. The number of simulations to be conducted.
 #' @param strategy A \code{character}. One of: "max_utility", "buy_hold", "cppi", "obpi".
 #' @param allocation A \code{double} between \code{0} and \code{1}. Only used for
 #' "max_utility" and "buy_hold".
 #' @param floor A \code{double}. The amount the investor doesn't want to loose. Only
 #' used if \code{strategy = "cppi"}.
-#' @param multiple An \code{integer} showing how aggressive the investor should be.
-#' @param aggressivness A \code{double} between \code{0} and \code{1} showing how
+#' @param multiple A \code{integer} showing how aggressive the investor should be.
+#' @param aggressiveness A \code{double} between \code{0} and \code{1} showing how
 #' aggressive the investor should be. Higher numbers are connected with higher convexity.
 #'
 #' @return A tidy \code{tibble}.
@@ -36,7 +36,7 @@ simulate_strategy <- function(budget     = 10000,
                               allocation = 0.5,
                               floor      = budget * 0.9,
                               multiple   = 10,
-                              aggressivness = 0.5) {
+                              aggressiveness = 0.5) {
 
   assertthat::assert_that(assertthat::is.number(budget))
   assertthat::assert_that(assertthat::is.number(horizon))
@@ -48,7 +48,7 @@ simulate_strategy <- function(budget     = 10000,
   assertthat::assert_that(assertthat::is.number(allocation))
   assertthat::assert_that(assertthat::is.number(floor))
   assertthat::assert_that(assertthat::is.number(multiple))
-  assertthat::assert_that(assertthat::is.number(aggressivness))
+  assertthat::assert_that(assertthat::is.number(aggressiveness))
   strategy <- match.arg(strategy, c("max_utility", "buy_hold", "cppi", "obpi"))[[1]]
 
   # initialize values
@@ -66,11 +66,12 @@ simulate_strategy <- function(budget     = 10000,
 
   } else if (strategy == "obpi") {
 
-    Strike <- stats::uniroot(f        = Solve4Strike,
-                             interval = c(0, Underlying_Index * 10),
-                             horizon, Underlying_Index, sigma, rf, budget,
-                             aggressivness * budget / 3)$root
-    Underlying_in_Portfolio_Percent <- Delta(horizon - Elapsed_Time, Underlying_Index, sigma, Strike, rf)
+    Strike <- stats::uniroot(
+      f        = solve_for_strike,
+      interval = c(0, Underlying_Index * 10),
+      horizon, Underlying_Index, sigma, rf, budget, aggressiveness * budget / 3
+      )$root
+    Underlying_in_Portfolio_Percent <- delta(horizon - Elapsed_Time, Underlying_Index, sigma, Strike, rf)
 
   } else {
 
@@ -87,7 +88,7 @@ simulate_strategy <- function(budget     = 10000,
   Percentage_Series <- Underlying_in_Portfolio_Percent
 
   # asset evolution and portfolio rebalancing
-  while (Elapsed_Time < horizon - 10^(-5)) {  # add this term to avoid errors
+  while (Elapsed_Time < horizon - 1e-5) {  # add this term to avoid errors
     # time elapses...
     Elapsed_Time <- Elapsed_Time + step
 
@@ -117,7 +118,7 @@ simulate_strategy <- function(budget     = 10000,
 
     } else if (strategy == "obpi") {
 
-      Underlying_in_Portfolio_Percent <- Delta(horizon - Elapsed_Time, Underlying_Index, sigma, Strike, rf)
+      Underlying_in_Portfolio_Percent <- delta(horizon - Elapsed_Time, Underlying_Index, sigma, Strike, rf)
       Underlyings_in_Portfolio <- Portfolio_Value * Underlying_in_Portfolio_Percent
       Cash_in_Portfolio        <- Portfolio_Value - Underlyings_in_Portfolio
 
@@ -140,11 +141,21 @@ simulate_strategy <- function(budget     = 10000,
            Portfolio_Value   = Portfolio_Value
       )
     ),
-    nrow     = 6L,
-    class    = "DynamicStrategies",
-    strategy = strategy,
-    budget   = budget,
-    n_simul  = n_simul
+    nrow           = 6L,
+    class          = "DynamicStrategies",
+    # arguments in the call as attributes
+    budget         = budget,
+    horizon        = horizon,
+    step           = step,
+    mu             = mu,
+    sigma          = sigma,
+    rf             = rf,
+    n_simul        = n_simul,
+    strategy       = strategy,
+    allocation     = allocation,
+    floor          = floor,
+    multiple       = multiple,
+    aggressiveness = aggressiveness
   )
 
 }
