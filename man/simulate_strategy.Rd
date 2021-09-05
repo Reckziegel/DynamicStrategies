@@ -48,7 +48,7 @@ used if \code{strategy = "cppi"}.}
 aggressive the investor should be. Higher numbers are connected with higher convexity.}
 }
 \value{
-A tidy \code{tibble}.
+A tidy \code{tibble} with 6 rows and 2 columns.
 }
 \description{
 This function simulates the payoff of different kinds of dynamic strategies.

@@ -24,7 +24,7 @@ A \code{ggplot2} object.
 }
 \description{
 This function loops over one of the arguments in \code{\link{simulate_strategy}}
-to make explicit the impact of that variable in the desired allocation policy.
+to make explicit the impact of a variable in the desired allocation policy.
 }
 \examples{
 # stress-test the `max_utility` strategy by changing the `allocation` parameter
@@ -33,7 +33,7 @@ plot_sensivities(strategy = x, variable = "allocation", from = 0.0, to = 1, size
 
 # stress-test the `cppi` strategy by changing the `floor` parameter
 y <- simulate_strategy(strategy = "cppi")
-plot_sensivities(strategy = y, variable = "floor", from = 7000, to = 10000, size = 20)
+plot_sensivities(strategy = y, variable = "floor", from = 7000, to = 9000, size = 20)
 
 # stress-test on the `obpi` strategy by changing the risk-free rate
 y <- simulate_strategy(strategy = "obpi")

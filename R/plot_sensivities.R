@@ -1,7 +1,7 @@
 #' Stress-Test a Dynamic Strategy
 #'
 #' This function loops over one of the arguments in \code{\link{simulate_strategy}}
-#' to make explicit the impact of that variable in the desired allocation policy.
+#' to make explicit the impact of a variable in the desired allocation policy.
 #'
 #' @param strategy An object of the \code{DynamicStrategies} class.
 #' @param variable A \code{character} with the parameter to loop-over.
@@ -20,7 +20,7 @@
 #'
 #' # stress-test the `cppi` strategy by changing the `floor` parameter
 #' y <- simulate_strategy(strategy = "cppi")
-#' plot_sensivities(strategy = y, variable = "floor", from = 7000, to = 10000, size = 20)
+#' plot_sensivities(strategy = y, variable = "floor", from = 7000, to = 9000, size = 20)
 #'
 #' # stress-test on the `obpi` strategy by changing the risk-free rate
 #' y <- simulate_strategy(strategy = "obpi")
@@ -69,17 +69,17 @@ plot_sensivities <- function(strategy, variable, from, to, size, ...) {
   if (variable == "allocation" & any(lop_over < 0)) {
     stop("`allocation` cann't be negative. Readjust your call.",call. = FALSE)
   }
-  if (variable == "florr" & any(lop_over < 0)) {
+  if (variable == "floor" & any(lop_over < 0)) {
     stop("`floor` cann't be negative. Readjust your call.",call. = FALSE)
   }
-  if (variable == "florr" & variable > budget) {
+  if (variable == "floor" & to > budget) {
     stop("`floor` cann't be greater then `budget`. Readjust your call.",call. = FALSE)
   }
   if (variable == "multiple" & any(lop_over < 0)) {
     stop("`multiple` cann't be negative. Readjust your call.",call. = FALSE)
   }
-  if (variable == "aggresiveness" & any(lop_over < 0) & any(lop_over > 1)) {
-    stop("`aggresiveness` must be between 0 and 1. Readjust your call.",call. = FALSE)
+  if (variable == "aggressiveness" & (any(lop_over < 0) | any(lop_over > 1))) {
+    stop("`aggressiveness` must be between 0 and 1. Readjust your call.",call. = FALSE)
   }
 
   if (variable == "horizon") {

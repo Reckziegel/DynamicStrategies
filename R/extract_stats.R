@@ -28,7 +28,7 @@ extract_stats <- function(simulation, level = 0.01) {
   out <- out[ , c("stat", "value")]
   out[5, 2] <- budget + out[5, 2]
   out[6, 2] <- budget + out[6, 2]
-  stat_nms <- c("Mu", "Volatility", "Skewness", "Kurtosis", "VaR", "CVaR")
+  stat_nms <- c("PnL", "Volatility", "Skewness", "Kurtosis", "VaR", "CVaR")
   out |>
     dplyr::mutate(stat = forcats::fct_relevel(.f = stat_nms, stat_nms))
 
