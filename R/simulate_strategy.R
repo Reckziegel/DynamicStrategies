@@ -19,7 +19,7 @@
 #' @param aggressiveness A \code{double} between \code{0} and \code{1} showing how
 #' aggressive the investor should be. Higher numbers are connected with higher convexity.
 #'
-#' @return A tidy \code{tibble} with 6 rows and 2 columns.
+#' @return An S3 \code{list} of the \code{DynamicStrategies} class.
 #'
 #' @export
 #'
