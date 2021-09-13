@@ -20,7 +20,7 @@ extract_stats <- function(simulation, level = 0.01) {
   assertthat::assert_that(assertthat::is.number(level))
 
   budget <- attributes(simulation)$budget
-  portfolio <- as.matrix(simulation[6, 2][[1]][[1]])
+  portfolio <- as.matrix(simulation$portfolio_value)
   size <- nrow(portfolio)
   p    <- ffp::as_ffp(rep(1 / size, size))
 

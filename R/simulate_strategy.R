@@ -52,97 +52,96 @@ simulate_strategy <- function(budget     = 10000,
   strategy <- match.arg(strategy, c("max_utility", "buy_hold", "cppi", "obpi"))[[1]]
 
   # initialize values
-  Underlying_Index <- budget  # value of the underlying at starting time, normalized to equal investment
-  Start            <- Underlying_Index
-  Elapsed_Time     <- 0
-  Portfolio_Value  <- budget
+  underlying_index <- budget  # value of the underlying at starting time, normalized to equal investment
+  start            <- underlying_index
+  elapsed_time     <- 0
+  portfolio_value  <- budget
 
   if (strategy == "cppi") {
 
-    Cushion                  <- max(0, Portfolio_Value - floor)
-    Underlyings_in_Portfolio <- min(Portfolio_Value, max(0, multiple * Cushion))
-    Cash_in_Portfolio        <- Portfolio_Value - Underlyings_in_Portfolio
-    Underlying_in_Portfolio_Percent <- Underlyings_in_Portfolio / Portfolio_Value
+    cushion                  <- max(0, portfolio_value - floor)
+    underlyings_in_portfolio <- min(portfolio_value, max(0, multiple * cushion))
+    cash_in_portfolio        <- portfolio_value - underlyings_in_portfolio
+    underlying_in_portfolio_percent <- underlyings_in_portfolio / portfolio_value
 
   } else if (strategy == "obpi") {
 
-    Strike <- stats::uniroot(
+    strike <- stats::uniroot(
       f        = solve_for_strike,
-      interval = c(0, Underlying_Index * 10),
-      horizon, Underlying_Index, sigma, rf, budget, aggressiveness * budget / 3
+      interval = c(0, underlying_index * 10),
+      horizon, underlying_index, sigma, rf, budget, aggressiveness * budget / 3
       )$root
-    Underlying_in_Portfolio_Percent <- delta(horizon - Elapsed_Time, Underlying_Index, sigma, Strike, rf)
+    underlying_in_portfolio_percent <- delta(horizon - elapsed_time, underlying_index, sigma, strike, rf)
 
   } else {
 
-    Underlying_in_Portfolio_Percent <- allocation
+    underlying_in_portfolio_percent <- allocation
 
   }
 
-  Underlyings_in_Portfolio <- Portfolio_Value * Underlying_in_Portfolio_Percent
-  Cash_in_Portfolio <- Portfolio_Value - Underlyings_in_Portfolio
+  underlyings_in_portfolio <- portfolio_value * underlying_in_portfolio_percent
+  cash_in_portfolio <- portfolio_value - underlyings_in_portfolio
 
   # initialize parameters for the plot (no theory in this)
-  Portfolio_Series  <- Portfolio_Value
-  Market_Series     <- Underlying_Index
-  Percentage_Series <- Underlying_in_Portfolio_Percent
+  portfolio_series  <- portfolio_value
+  market_series     <- underlying_index
+  percentage_series <- underlying_in_portfolio_percent
 
   # asset evolution and portfolio rebalancing
-  while (Elapsed_Time < horizon - 1e-5) {  # add this term to avoid errors
+  while (elapsed_time < horizon - 1e-5) {  # add this term to avoid errors
     # time elapses...
-    Elapsed_Time <- Elapsed_Time + step
+    elapsed_time <- elapsed_time + step
 
     # ...asset prices evolve and portfolio takes on new value...
     Multiplicator <- exp((mu - sigma ^ 2 / 2) * step + sigma * sqrt(step) * stats::rnorm(n_simul))
-    Underlying_Index         <- Underlying_Index  * Multiplicator
-    Underlyings_in_Portfolio <- Underlyings_in_Portfolio * Multiplicator
-    Cash_in_Portfolio        <- Cash_in_Portfolio * exp(rf * step)
-    Portfolio_Value          <- Underlyings_in_Portfolio + Cash_in_Portfolio
+    underlying_index         <- underlying_index  * Multiplicator
+    underlyings_in_portfolio <- underlyings_in_portfolio * Multiplicator
+    cash_in_portfolio        <- cash_in_portfolio * exp(rf * step)
+    portfolio_value          <- underlyings_in_portfolio + cash_in_portfolio
 
     if (strategy == "max_utility") {
 
-      Underlyings_in_Portfolio <- Portfolio_Value * Underlying_in_Portfolio_Percent
-      Cash_in_Portfolio        <- Portfolio_Value - Underlyings_in_Portfolio
+      underlyings_in_portfolio <- portfolio_value * underlying_in_portfolio_percent
+      cash_in_portfolio        <- portfolio_value - underlyings_in_portfolio
 
     } else if (strategy == "buy_hold") {
 
-      Underlying_in_Portfolio_Percent <- Underlyings_in_Portfolio / Portfolio_Value
+      underlying_in_portfolio_percent <- underlyings_in_portfolio / portfolio_value
 
     } else if (strategy == "cppi") {
 
       floor                           <- floor * exp(rf * step)
-      Cushion                         <- pmax(0, (Portfolio_Value - floor))
-      Underlyings_in_Portfolio        <- pmin(Portfolio_Value, pmax(0, multiple * Cushion))
-      Cash_in_Portfolio               <- Portfolio_Value - Underlyings_in_Portfolio
-      Underlying_in_Portfolio_Percent <- Underlyings_in_Portfolio / Portfolio_Value
+      cushion                         <- pmax(0, (portfolio_value - floor))
+      underlyings_in_portfolio        <- pmin(portfolio_value, pmax(0, multiple * cushion))
+      cash_in_portfolio               <- portfolio_value - underlyings_in_portfolio
+      underlying_in_portfolio_percent <- underlyings_in_portfolio / portfolio_value
 
     } else if (strategy == "obpi") {
 
-      Underlying_in_Portfolio_Percent <- delta(horizon - Elapsed_Time, Underlying_Index, sigma, Strike, rf)
-      Underlyings_in_Portfolio <- Portfolio_Value * Underlying_in_Portfolio_Percent
-      Cash_in_Portfolio        <- Portfolio_Value - Underlyings_in_Portfolio
+      underlying_in_portfolio_percent <- delta(horizon - elapsed_time, underlying_index, sigma, strike, rf)
+      underlyings_in_portfolio <- portfolio_value * underlying_in_portfolio_percent
+      cash_in_portfolio        <- portfolio_value - underlyings_in_portfolio
 
     }
 
     # store one path for the movie (no theory in this)
-    Portfolio_Series  <- c(Portfolio_Series, Portfolio_Value[1])
-    Market_Series     <- c(Market_Series, Underlying_Index[1])
-    Percentage_Series <- c(Percentage_Series, Underlying_in_Portfolio_Percent[1])
+    portfolio_series  <- c(portfolio_series, portfolio_value[1])
+    market_series     <- c(market_series, underlying_index[1])
+    percentage_series <- c(percentage_series, underlying_in_portfolio_percent[1])
 
   }
 
-  tibble::new_tibble(
-    tibble::enframe(
-      list(Time              = seq(0, horizon, step),
-           Portfolio_Series  = Portfolio_Series,
-           Market_Series     = Market_Series,
-           Percentage_Series = Percentage_Series,
-           Underlying_Index  = Underlying_Index,
-           Portfolio_Value   = Portfolio_Value
-      )
+  vctrs::new_list_of(
+    list(time              = seq(0, horizon, step),
+         portfolio_series  = portfolio_series,
+         market_series     = market_series,
+         percentage_series = percentage_series,
+         underlying_index  = underlying_index,
+         portfolio_value   = portfolio_value
     ),
-    nrow           = 6L,
-    class          = "DynamicStrategies",
+    ptype = double(),
+    class = "DynamicStrategies",
+
     # arguments in the call as attributes
     budget         = budget,
     horizon        = horizon,

@@ -21,22 +21,19 @@ autoplot.DynamicStrategies <- function(object, ...) {
   budget <- attributes(object)$budget
   bins   <- attributes(object)$n_simul
 
-  .portfolio <- object |>
-    dplyr::slice(5:6) |>
-    tibble::deframe() |>
-    tibble::as_tibble() |>
+  .portfolio <- tibble::tibble(underlying_index = object[["underlying_index"]],
+                               portfolio_value  = object[["portfolio_value"]]) |>
     dplyr::mutate(group = "Portfolio")
-  .underlying <- object |>
-    dplyr::slice(5:6) |>
-    tibble::deframe() |>
-    tibble::as_tibble() |>
-    dplyr::mutate(Underlying_Index = sort(.data$Underlying_Index),
-                  Portfolio_Value  = .data$Underlying_Index,
+
+  .underlying <- tibble::tibble(underlying_index = object[["underlying_index"]],
+                                portfolio_value  = object[["underlying_index"]]) |>
+    dplyr::mutate(underlying_index = sort(.data$underlying_index),
+                  portfolio_value  = .data$underlying_index,
                   group            = "Underlying")
 
 
   p <- dplyr::bind_rows(.portfolio, .underlying) |>
-    ggplot2::ggplot(ggplot2::aes(.data$Underlying_Index, .data$Portfolio_Value, color = .data$group)) +
+    ggplot2::ggplot(ggplot2::aes(.data$underlying_index, .data$portfolio_value, color = .data$group)) +
     ggplot2::geom_vline(xintercept = budget, linetype = 2, color = "white") +
     ggplot2::geom_hline(yintercept = budget, linetype = 2, color = "white") +
     ggplot2::geom_point(size = 0.1) +

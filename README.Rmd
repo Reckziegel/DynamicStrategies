@@ -42,11 +42,14 @@ library(ggplot2)
 convex_strat <- simulate_strategy(strategy = "max_utility")
 convex_strat
 
+
 # See the main statistics
 extract_stats(convex_strat)
 
+
 # See the P&L simulation
 autoplot(convex_strat)
+
 
 # Stress-Test a parameter
 plot_sensivities(strategy = convex_strat, variable = "allocation", from = 0, to = 1, size = 20)

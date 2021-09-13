@@ -32,28 +32,24 @@ library(ggplot2)
 # Build a Convex Strategy
 convex_strat <- simulate_strategy(strategy = "max_utility")
 convex_strat
-#> # A tibble: 6 x 2
-#>   name              value         
-#>   <chr>             <list>        
-#> 1 Time              <dbl [127]>   
-#> 2 Portfolio_Series  <dbl [127]>   
-#> 3 Market_Series     <dbl [127]>   
-#> 4 Percentage_Series <dbl [127]>   
-#> 5 Underlying_Index  <dbl [10,000]>
-#> 6 Portfolio_Value   <dbl [10,000]>
-
+#> << Dynamic Strategy >>
+#> time             : 0 0.003968254 0.007936508 ... 0.4920635 0.4960317 0.5
+#> portfolio_series : 10000 9774.044 9592.819 ... 13677.28 13556.93 13785.87
+#> market_series    : 10000 9546.501 9190.973 ... 17985.99 17666.63 18260.51
+#> percentage_series: 0.5 0.5 0.5 ... 0.5 0.5 0.5
+#> underlying_index : 18260.51 11529.34 9717.875 ... 25244.07 8463.544 12101.33
+#> portfolio_value  : 13785.87 10932.21 10040.53 ... 16220.87 9410.509 11207.85
 # See the main statistics
 extract_stats(convex_strat)
 #> # A tibble: 6 x 2
 #>   stat           value
 #>   <fct>          <dbl>
-#> 1 PnL        10625.   
-#> 2 Volatility  1498.   
-#> 3 Skewness       0.419
-#> 4 Kurtosis       3.32 
-#> 5 VaR         2414.   
-#> 6 CVaR        2773.
-
+#> 1 PnL        10628.   
+#> 2 Volatility  1505.   
+#> 3 Skewness       0.479
+#> 4 Kurtosis       3.51 
+#> 5 VaR         2433.   
+#> 6 CVaR        2736.
 # See the P&L simulation
 autoplot(convex_strat)
 ```

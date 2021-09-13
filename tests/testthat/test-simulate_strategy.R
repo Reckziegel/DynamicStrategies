@@ -8,13 +8,12 @@ test_that("strategy `max_utility` works", {
   expect_type(utility, "list")
   expect_s3_class(utility, "DynamicStrategies")
   # size
-  expect_length(utility, 2L)
-  expect_equal(nrow(utility), 6L)
-  expect_equal(ncol(utility), 2L)
+  expect_length(utility, 6L)
   # names
-  expect_named(utility, c("name", "value"))
+  expect_named(utility, c("time", "portfolio_series", "market_series", "percentage_series",
+                          "underlying_index", "portfolio_value"))
   # col classes
-  expect_equal(purrr::flatten_chr(purrr::map(utility, class)), c("character", "list"))
+  expect_equal(purrr::flatten_chr(purrr::map(utility, class)), rep("numeric", 6L))
 })
 
 test_that("strategy `cppi` works", {
@@ -22,13 +21,12 @@ test_that("strategy `cppi` works", {
   expect_type(cppi, "list")
   expect_s3_class(cppi, "DynamicStrategies")
   # size
-  expect_length(cppi, 2L)
-  expect_equal(nrow(cppi), 6L)
-  expect_equal(ncol(cppi), 2L)
+  expect_length(cppi, 6L)
   # names
-  expect_named(cppi, c("name", "value"))
+  expect_named(cppi, c("time", "portfolio_series", "market_series", "percentage_series",
+                       "underlying_index", "portfolio_value"))
   # col classes
-  expect_equal(purrr::flatten_chr(purrr::map(cppi, class)), c("character", "list"))
+  expect_equal(purrr::flatten_chr(purrr::map(cppi, class)), rep("numeric", 6L))
 })
 
 test_that("strategy `buy_hold` works", {
@@ -36,13 +34,12 @@ test_that("strategy `buy_hold` works", {
   expect_type(buy_hold, "list")
   expect_s3_class(buy_hold, "DynamicStrategies")
   # size
-  expect_length(buy_hold, 2L)
-  expect_equal(nrow(buy_hold), 6L)
-  expect_equal(ncol(buy_hold), 2L)
+  expect_length(buy_hold, 6L)
   # names
-  expect_named(buy_hold, c("name", "value"))
+  expect_named(buy_hold, c("time", "portfolio_series", "market_series", "percentage_series",
+                           "underlying_index", "portfolio_value"))
   # col classes
-  expect_equal(purrr::flatten_chr(purrr::map(buy_hold, class)), c("character", "list"))
+  expect_equal(purrr::flatten_chr(purrr::map(buy_hold, class)), rep("numeric", 6L))
 })
 
 test_that("strategy `obpi` works", {
@@ -50,13 +47,12 @@ test_that("strategy `obpi` works", {
   expect_type(obpi, "list")
   expect_s3_class(obpi, "DynamicStrategies")
   # size
-  expect_length(obpi, 2L)
-  expect_equal(nrow(obpi), 6L)
-  expect_equal(ncol(obpi), 2L)
+  expect_length(obpi, 6L)
   # names
-  expect_named(obpi, c("name", "value"))
+  expect_named(obpi, c("time", "portfolio_series", "market_series", "percentage_series",
+                       "underlying_index", "portfolio_value"))
   # col classes
-  expect_equal(purrr::flatten_chr(purrr::map(obpi, class)), c("character", "list"))
+  expect_equal(purrr::flatten_chr(purrr::map(obpi, class)), rep("numeric", 6L))
 })
 
 

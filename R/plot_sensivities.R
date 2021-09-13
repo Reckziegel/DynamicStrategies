@@ -31,7 +31,7 @@ plot_sensivities <- function(strategy, variable, from, to, size, ...) {
   assertthat::assert_that(assertthat::is.number(from))
   assertthat::assert_that(assertthat::is.number(to))
   assertthat::assert_that(assertthat::is.number(size))
-  variable <- match.arg(variable, c("horizon", "mu", "sigma", "rf", "allocation", "floor", "multiple", "aggressiveness"))[[1]]
+  variable <- match.arg(variable, c("horizon", "mu", "sigma", "rf", "allocation", "floor", "multiple", "aggressiveness"))[[1L]]
   strat    <- attributes(strategy)$strategy
   lop_over <- seq(from = from, to = to, length.out = size)
 
