@@ -7,12 +7,13 @@
 #' @param level A number with the desired probability level. The default is
 #' \code{level = 0.01}.
 #'
-#' @return A tibble with 3 columns.
+#' @return A tibble with 2 columns and 6 rows.
 #' @export
 #'
 #' @examples
 #' utility <- simulate_strategy(strategy = "max_utility")
 #' cppi    <- simulate_strategy(strategy = "cppi")
+#'
 #' extract_stats(utility)
 #' extract_stats(cppi)
 extract_stats <- function(simulation, level = 0.01) {
@@ -29,7 +30,7 @@ extract_stats <- function(simulation, level = 0.01) {
   out[5, 2] <- budget + out[5, 2]
   out[6, 2] <- budget + out[6, 2]
   stat_nms <- c("PnL", "Volatility", "Skewness", "Kurtosis", "VaR", "CVaR")
-  out |>
-    dplyr::mutate(stat = forcats::fct_relevel(.f = stat_nms, stat_nms))
+
+  dplyr::mutate(out, stat = forcats::fct_relevel(.f = stat_nms, stat_nms))
 
 }

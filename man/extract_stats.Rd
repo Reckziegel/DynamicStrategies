@@ -13,7 +13,7 @@ extract_stats(simulation, level = 0.01)
 \code{level = 0.01}.}
 }
 \value{
-A tibble with 3 columns.
+A tibble with 2 columns and 6 rows.
 }
 \description{
 Computes the mean, standard deviation, skewness, kurtosis, Value-at-Risk (VaR)
@@ -22,6 +22,7 @@ and Conditional Value-at-Risk CVaR) of a strategy.
 \examples{
 utility <- simulate_strategy(strategy = "max_utility")
 cppi    <- simulate_strategy(strategy = "cppi")
+
 extract_stats(utility)
 extract_stats(cppi)
 }

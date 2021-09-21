@@ -22,4 +22,7 @@ library(ggplot2)
 
 # Maximum Utility
 simulate_strategy(strategy = "max_utility") |> autoplot()
+
+# cppi
+simulate_strategy(strategy = "cppi", multiple = 3) |> autoplot()
 }
